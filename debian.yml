@@ -1,0 +1,95 @@
+## base template
+---
+- hosts: localhost
+  user: root
+  connection: local
+
+  vars:
+    user: user
+
+  tasks:
+  - name: Add {{user}} to sudo
+    shell: usermod -a -G sudo {{user}}
+
+  - name: copy sources.list
+    copy: src=files/sources.list dest=/etc/apt/sources.list owner=root group=root mode=0644
+
+  - name: Add spotify signing key
+    apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=BBEBDCB318AD50EC6865090613B00F1FD2C19886
+
+  - name: Copy spotify.list to /etc/apt/sources.list.d
+    copy: src=files/spotify.list dest=/etc/apt/sources.list.d/ owner=root group=root mode=0644
+
+  - name: apt-update
+    apt: update_cache=yes
+
+  - name: apt-upgrade
+    apt: upgrade=dist
+
+  - name: Install software
+    apt: name={{item}} state=latest update_cache=yes force=yes
+    with_items:
+     - vim
+     - docker
+     - wine
+     - wireshark
+     - binwalk
+     - virtualbox-5.1
+     - hexchat
+     - spotify-client
+     - aircrack-ng
+
+  - name: Downloading Google Chrome
+    get_url:
+      url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      dest: /home/{{user}}/Downloads/chrome.deb
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0440
+
+  - name: Installing Google Chrome
+    apt: "deb=/home/{{user}}/Downloads/chrome.deb"
+
+  - name: Downloading atom
+    get_url:
+      url: https://atom.io/download/deb
+      dest: /home/{{user}}/Downloads/atom.deb
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0440
+
+  - name: Installing atom
+    apt: "deb=/home/{{user}}/Downloads/atom.deb"
+
+  - name: Downloading Dropbox
+    get_url:
+      url: https://www.dropbox.com/download?dl=packages/debian/dropbox_2015.10.28_amd64.deb
+      dest: /home/{{user}}/Downloads/dropbox.deb
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+
+  - name: Installing Dropbox
+    apt: "deb=/home/{{user}}/Downloads/dropbox.deb"
+
+  - name: Downloading burp
+    get_url:
+      url: https://portswigger.net/Burp/Releases/Download?productId=100&version=1.7.06&type=Linux
+      dest: /home/{{user}}/Downloads/burp.sh
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+
+  - name: Installing burp
+    script: /home/{{user}}/Downloads/burp.sh
+
+  - name: Download Slack
+    get_url:
+      url: https://downloads.slack-edge.com/linux_releases/slack-desktop-2.1.2-amd64.deb
+      dest: /home/{{user}}/Downloads/slack.deb
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0755
+
+  - name: Install Slack
+    apt: "deb=/home/{{user}}/Downloads/slack.deb"
