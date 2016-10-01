@@ -38,6 +38,8 @@
      - hexchat
      - spotify-client
      - aircrack-ng
+     - ghex
+     - hydra
 
   - name: Downloading Google Chrome
     get_url:
