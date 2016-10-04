@@ -40,6 +40,7 @@
      - aircrack-ng
      - ghex
      - hydra
+     - byzanz
 
   - name: Downloading Google Chrome
     get_url:
