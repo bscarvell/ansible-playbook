@@ -1,0 +1,41 @@
+## base template
+# todo:
+#   - Split into individual tasks
+---
+- hosts: localhost
+  user: root
+  connection: local
+
+  vars:
+    user: mnz
+
+  tasks:
+  - name: "Install python-dnf"
+    raw: "dnf install python-dnf"
+
+  - name: Install software
+    dnf: name={{item}} state=latest
+    with_items:
+     - vim
+     - docker
+     - wine
+     - wireshark
+     - binwalk
+     - hexchat
+     - ghex
+     - hydra
+     - byzanz
+     - arduino
+     - lsb
+     - libXScrnSaver
+
+  - name: Download Google Chrome
+    get_url:
+      url: https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+      dest: /home/{{user}}/Downloads/chrome.rpm
+      owner: "{{user}}"
+      group: "{{user}}"
+      mode: 0440
+
+  - name: Install Google Chrome
+    dnf: name=/home/{{user}}/Downloads/chrome.rpm state=latest
