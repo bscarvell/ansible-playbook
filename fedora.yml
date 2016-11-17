@@ -1,4 +1,6 @@
-## base template
+## fedora template
+# $ sudo ansible-playbook -i localhost, fedora.yml
+#
 # todo:
 #   - Split into individual tasks
 ---
